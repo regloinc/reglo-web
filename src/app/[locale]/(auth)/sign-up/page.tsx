@@ -1,7 +1,6 @@
 import type { PropsWithParamsLocale } from '@core/types'
 import { Icon } from '@core/ui/icons'
 import { SignupForm } from '@core/ui/signup-form'
-import { BRAND } from '@reglo-co/shared/consts'
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 
@@ -23,7 +22,7 @@ export default function SignupPage() {
       <div className="flex w-full max-w-sm flex-col gap-6">
         <div className="flex items-center gap-3 self-center">
           <Icon.BrandLogoSquare className="size-6" />
-          <span className="font-bold font-mono text-xl">{BRAND.NAME.toUpperCase()}</span>
+          <span className="font-bold font-mono text-xl">REGLO</span>
         </div>
         <SignupForm />
       </div>
