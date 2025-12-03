@@ -1,0 +1,62 @@
+{
+  "app": {
+    "title": "Reglo",
+    "description": "Regras de negócio é na Reglo.",
+    "hello": "Olá Mundo"
+  },
+  "auth": {
+    "signUpTitle": "Cadastro - Reglo",
+    "signUpDescription": "Crie sua conta para continuar",
+    "title": "Entrar - Reglo",
+    "description": "Faça login para continuar",
+    "welcome": "Bem-vindo de volta",
+    "loginDescription": "Faça login com sua conta Google",
+    "loginWithGoogle": "Entrar com Google",
+    "orContinueWith": "Ou continue com",
+    "email": "E-mail",
+    "emailPlaceholder": "exemplo@email.com",
+    "password": "Senha",
+    "forgotPassword": "Esqueceu sua senha?",
+    "login": "Entrar",
+    "noAccount": "Não tem uma conta?",
+    "signUp": "Cadastre-se",
+    "createAccount": "Crie sua conta",
+    "signupDescription": "Digite seu e-mail abaixo para criar sua conta",
+    "fullName": "Nome Completo",
+    "fullNamePlaceholder": "João Silva",
+    "confirmPassword": "Confirmar Senha",
+    "passwordRequirement": "Deve ter pelo menos 8 caracteres.",
+    "createAccountButton": "Criar Conta",
+    "alreadyHaveAccount": "Já tem uma conta?",
+    "signIn": "Entrar",
+    "termsAgreement": "Ao clicar em continuar, você concorda com nossos",
+    "termsOfService": "Termos de Serviço",
+    "and": "e",
+    "privacyPolicy": "Política de Privacidade",
+    "errors": {
+      "fullNameRequired": "Nome completo é obrigatório.",
+      "emailRequired": "E-mail é obrigatório.",
+      "emailInvalid": "Informe um e-mail válido.",
+      "passwordRequired": "Senha é obrigatória.",
+      "passwordMin": "A senha deve ter pelo menos 8 caracteres.",
+      "confirmPasswordRequired": "A confirmação de senha é obrigatória.",
+      "passwordsMismatch": "As senhas devem ser iguais."
+    }
+  },
+  "notFound": {
+    "title": "404 - Página não encontrada",
+    "description": "A página que você está procurando não existe ou foi movida para outro lugar.",
+    "goHome": "Ir para home",
+    "goBack": "Última página"
+  },
+  "changelog": {
+    "title": "Changelog | Reglo",
+    "description": "Histórico de mudanças do Reglo"
+  },
+  "errors": {
+    "code": {
+      "UNKNOWN_ERROR": "Ocorreu um erro desconhecido.",
+      "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL": "Usuário já existe. Use outro e-mail."
+    }
+  }
+}

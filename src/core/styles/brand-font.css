@@ -1,0 +1,40 @@
+@layer base {
+  :root {
+    --font-sans: var(--font-fira-sans);
+    --font-mono: var(--font-fira-mono);
+    --font-code: var(--font-fira-code);
+    --font-condensed: var(--font-fira-sans-condensed);
+    --font-extra-condensed: var(--font-fira-sans-extra-condensed);
+  }
+
+  body {
+    font-family: var(--font-fira-sans), system-ui, sans-serif;
+  }
+
+  code,
+  kbd,
+  samp,
+  pre {
+    font-family: var(--font-fira-code), monospace;
+  }
+}
+
+@utility font-sans {
+  font-family: var(--font-fira-sans), sans-serif;
+}
+
+@utility font-mono {
+  font-family: var(--font-fira-mono), monospace;
+}
+
+@utility font-code {
+  font-family: var(--font-fira-code), monospace;
+}
+
+@utility font-condensed {
+  font-family: var(--font-fira-sans-condensed), sans-serif;
+}
+
+@utility font-extra-condensed {
+  font-family: var(--font-fira-sans-extra-condensed), sans-serif;
+}

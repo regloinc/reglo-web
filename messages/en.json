@@ -1,0 +1,62 @@
+{
+  "app": {
+    "title": "Reglo",
+    "description": "Business rules are at Reglo.",
+    "hello": "Hello World"
+  },
+  "auth": {
+    "signUpTitle": "Sign up - Reglo",
+    "signUpDescription": "Create your account to continue",
+    "title": "Sign in - Reglo",
+    "description": "Login to continue",
+    "welcome": "Welcome back",
+    "loginDescription": "Login with your Google account",
+    "loginWithGoogle": "Login with Google",
+    "orContinueWith": "Or continue with",
+    "email": "Email",
+    "emailPlaceholder": "example@email.com",
+    "password": "Password",
+    "forgotPassword": "Forgot your password?",
+    "login": "Login",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "createAccount": "Create your account",
+    "signupDescription": "Enter your email below to create your account",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "John Doe",
+    "confirmPassword": "Confirm Password",
+    "passwordRequirement": "Must be at least 8 characters long.",
+    "createAccountButton": "Create Account",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "termsAgreement": "By clicking continue, you agree to our",
+    "termsOfService": "Terms of Service",
+    "and": "and",
+    "privacyPolicy": "Privacy Policy",
+    "errors": {
+      "fullNameRequired": "Full name is required.",
+      "emailRequired": "Email is required.",
+      "emailInvalid": "Enter a valid email address.",
+      "passwordRequired": "Password is required.",
+      "passwordMin": "Password must be at least 8 characters long.",
+      "confirmPasswordRequired": "Password confirmation is required.",
+      "passwordsMismatch": "Passwords must match."
+    }
+  },
+  "notFound": {
+    "title": "404 - Page not found",
+    "description": "The page you are looking for does not exist or has been moved elsewhere.",
+    "goHome": "Go to home",
+    "goBack": "Go back"
+  },
+  "changelog": {
+    "title": "Changelog | Reglo",
+    "description": "Reglo change history"
+  },
+  "errors": {
+    "code": {
+      "UNKNOWN_ERROR": "An unknown error occurred.",
+      "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL": "User already exists. Use another email."
+    }
+  }
+}
