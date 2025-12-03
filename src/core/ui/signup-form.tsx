@@ -17,7 +17,6 @@ import {
   FieldLabel,
   Input,
 } from '@core/ui/primitives'
-import { userCollection } from '@db/collections'
 import { useMutation } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -53,70 +52,43 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
   })
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (formData: SignupFormValues) => {
-      const result = schema.safeParse(formData)
-
-      if (!result.success) {
-        result.error.issues.forEach((issue) => {
-          const field = issue.path[0]
-
-          if (!field) {
-            return
-          }
-
-          setError(field as keyof SignupFormValues, {
-            type: issue.code,
-            message: issue.message,
-          })
-        })
-
-        throw new Error('VALIDATION_ERROR')
-      }
-
+    mutationFn: async (result: SignupFormValues) => {
       const { data, error } = await auth.signUp.email({
-        email: result.data.email,
-        password: result.data.password,
-        name: result.data.name,
+        email: result.email,
+        password: result.password,
+        name: result.name,
       })
 
-      if (error) {
-        throw new Error(error.code)
-      }
-
-      if (data?.user) {
-        const userData = {
-          id: data.user.id,
-          name: data.user.name,
-          email: data.user.email,
-          image: data.user.image ?? undefined,
-        }
-
-        if (userCollection.has(data.user.id)) {
-          userCollection.update(data.user.id, (draft) => {
-            draft.name = userData.name
-            draft.email = userData.email
-            draft.image = userData.image
-          })
-        } else {
-          userCollection.insert(userData)
-        }
-      }
-
+      if (error) throw new Error(error.code)
       return data
     },
     onSuccess: () => {
       router.push('/console')
     },
     onError: (error) => {
-      if (error.message !== 'VALIDATION_ERROR') {
-        toastErrorCode(error.message)
-      }
+      toastErrorCode(error.message)
     },
   })
 
   const onSubmit = (formData: SignupFormValues) => {
     clearErrors()
-    mutate(formData)
+    const result = schema.safeParse(formData)
+
+    if (!result.success) {
+      result.error.issues.forEach((issue) => {
+        const [field] = issue.path
+        if (!field) return
+
+        setError(field as keyof SignupFormValues, {
+          type: issue.code,
+          message: issue.message,
+        })
+      })
+
+      return
+    }
+
+    mutate(result.data)
   }
 
   return (

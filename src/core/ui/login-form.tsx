@@ -1,5 +1,8 @@
 'use client'
 
+import { auth } from '@auth/config'
+import { useSignInFormSchema } from '@auth/schemas'
+import { useToastErrorCode } from '@core/helpers/toast-error'
 import { cn } from '@core/lib/utils'
 import { Icon } from '@core/ui/icons'
 import {
@@ -16,11 +19,71 @@ import {
   FieldSeparator,
   Input,
 } from '@core/ui/primitives'
+import { useMutation } from '@tanstack/react-query'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
+import { useForm } from 'react-hook-form'
+
+type LoginFormValues = {
+  email: string
+  password: string
+}
 
 export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
   const t = useTranslations('auth')
+  const schema = useSignInFormSchema()
+  const toastErrorCode = useToastErrorCode()
+  const router = useRouter()
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  })
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (result: LoginFormValues) => {
+      const { data, error } = await auth.signIn.email({
+        email: result.email,
+        password: result.password,
+      })
+
+      if (error) throw new Error(error.code)
+      return data
+    },
+    onSuccess: () => {
+      router.push('/console')
+    },
+    onError: (error) => {
+      toastErrorCode(error.message)
+    },
+  })
+
+  const onSubmit = (params: LoginFormValues) => {
+    clearErrors()
+    const result = schema.safeParse(params)
+    if (!result.success) {
+      result.error.issues.forEach((issue) => {
+        const [field] = issue.path
+        if (!field) return
+        setError(field as keyof LoginFormValues, {
+          type: issue.code,
+          message: issue.message,
+        })
+      })
+
+      return
+    }
+    mutate(result.data as LoginFormValues)
+  }
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
@@ -30,7 +93,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
           <CardDescription>{t('loginDescription')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <FieldGroup>
               <Field>
                 <Button variant="outline" type="button">
@@ -43,13 +106,33 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
               </FieldSeparator>
               <Field>
                 <FieldLabel htmlFor="email">{t('email')}</FieldLabel>
-                <Input id="email" type="email" placeholder={t('emailPlaceholder')} required />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder={t('emailPlaceholder')}
+                  {...register('email')}
+                />
+                {errors.email && (
+                  <FieldDescription className="text-destructive text-xs">
+                    {errors.email.message}
+                  </FieldDescription>
+                )}
               </Field>
               <Field>
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">{t('password')}</FieldLabel>
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder={t('passwordPlaceholder')}
+                  {...register('password')}
+                />
+                {errors.password && (
+                  <FieldDescription className="text-destructive text-xs">
+                    {errors.password.message}
+                  </FieldDescription>
+                )}
                 <Link
                   href="/forgot-password"
                   className="text-right text-xs underline-offset-4 hover:underline"
@@ -57,8 +140,10 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                   {t('forgotPassword')}
                 </Link>
               </Field>
-              <Field>
-                <Button type="submit">{t('login')}</Button>
+              <Field className="gap-4">
+                <Button loading={isPending} type="submit" disabled={isPending}>
+                  {t('login')}
+                </Button>
                 <FieldDescription className="text-center">
                   {t('noAccount')} <Link href="/sign-up">{t('signUp')}</Link>
                 </FieldDescription>

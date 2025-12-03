@@ -16,6 +16,7 @@
     "email": "E-mail",
     "emailPlaceholder": "exemplo@email.com",
     "password": "Senha",
+    "passwordPlaceholder": "••••••••",
     "forgotPassword": "Esqueceu sua senha?",
     "login": "Entrar",
     "noAccount": "Não tem uma conta?",
@@ -56,7 +57,8 @@
   "errors": {
     "code": {
       "UNKNOWN_ERROR": "Ocorreu um erro desconhecido.",
-      "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL": "Usuário já existe. Use outro e-mail."
+      "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL": "Usuário já existe. Use outro e-mail.",
+      "INVALID_EMAIL_OR_PASSWORD": "E-mail ou senha inválidos."
     }
   }
 }
