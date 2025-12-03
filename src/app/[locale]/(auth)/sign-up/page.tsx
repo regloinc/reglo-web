@@ -1,6 +1,6 @@
+import { SignupForm } from '@auth/ui/signup-form'
 import type { PropsWithParamsLocale } from '@core/types'
 import { Icon } from '@core/ui/icons'
-import { SignupForm } from '@core/ui/signup-form'
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 

@@ -1,6 +1,6 @@
+import { LoginForm } from '@auth/ui/login-form'
 import type { PropsWithParamsLocale } from '@core/types'
 import { Icon } from '@core/ui/icons'
-import { LoginForm } from '@core/ui/login-form'
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 

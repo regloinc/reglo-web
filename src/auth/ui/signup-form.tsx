@@ -1,8 +1,7 @@
 'use client'
 
-import { auth } from '@auth/config'
+import { useSignUp } from '@auth/hooks/mutations'
 import { useSignUpFormSchema } from '@auth/schemas'
-import { useToastErrorCode } from '@core/helpers/toast-error'
 import { cn } from '@core/lib/utils'
 import {
   Button,
@@ -17,13 +16,11 @@ import {
   FieldLabel,
   Input,
 } from '@core/ui/primitives'
-import { useMutation } from '@tanstack/react-query'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 
-type SignupFormValues = {
+export type SignupFormValues = {
   name: string
   email: string
   password: string
@@ -32,9 +29,8 @@ type SignupFormValues = {
 
 export function SignupForm({ className, ...props }: React.ComponentProps<'div'>) {
   const t = useTranslations('auth')
-  const toastErrorCode = useToastErrorCode()
-  const router = useRouter()
   const schema = useSignUpFormSchema()
+  const { mutate, isPending } = useSignUp()
 
   const {
     register,
@@ -48,25 +44,6 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
       email: '',
       password: '',
       confirmPassword: '',
-    },
-  })
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (result: SignupFormValues) => {
-      const { data, error } = await auth.signUp.email({
-        email: result.email,
-        password: result.password,
-        name: result.name,
-      })
-
-      if (error) throw new Error(error.code)
-      return data
-    },
-    onSuccess: () => {
-      router.push('/console')
-    },
-    onError: (error) => {
-      toastErrorCode(error.message)
     },
   })
 
@@ -133,7 +110,12 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
                 <Field className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <Field>
                     <FieldLabel htmlFor="password">{t('password')}</FieldLabel>
-                    <Input id="password" type="password" {...register('password')} />
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder={t('passwordPlaceholder')}
+                      {...register('password')}
+                    />
                     {errors.password && (
                       <FieldDescription className="text-destructive text-xs">
                         {errors.password.message}
@@ -142,7 +124,12 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="confirmPassword">{t('confirmPassword')}</FieldLabel>
-                    <Input id="confirmPassword" type="password" {...register('confirmPassword')} />
+                    <Input
+                      id="confirmPassword"
+                      placeholder={t('passwordPlaceholder')}
+                      type="password"
+                      {...register('confirmPassword')}
+                    />
                     {errors.confirmPassword && (
                       <FieldDescription className="text-destructive text-xs">
                         {errors.confirmPassword.message}

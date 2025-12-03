@@ -1,8 +1,7 @@
 'use client'
 
-import { auth } from '@auth/config'
+import { type LoginFormValues, useSignIn } from '@auth/hooks/mutations'
 import { useSignInFormSchema } from '@auth/schemas'
-import { useToastErrorCode } from '@core/helpers/toast-error'
 import { cn } from '@core/lib/utils'
 import { Icon } from '@core/ui/icons'
 import {
@@ -19,22 +18,14 @@ import {
   FieldSeparator,
   Input,
 } from '@core/ui/primitives'
-import { useMutation } from '@tanstack/react-query'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
-
-type LoginFormValues = {
-  email: string
-  password: string
-}
 
 export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
   const t = useTranslations('auth')
   const schema = useSignInFormSchema()
-  const toastErrorCode = useToastErrorCode()
-  const router = useRouter()
+  const { mutate, isPending } = useSignIn()
 
   const {
     register,
@@ -46,24 +37,6 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
     defaultValues: {
       email: '',
       password: '',
-    },
-  })
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (result: LoginFormValues) => {
-      const { data, error } = await auth.signIn.email({
-        email: result.email,
-        password: result.password,
-      })
-
-      if (error) throw new Error(error.code)
-      return data
-    },
-    onSuccess: () => {
-      router.push('/console')
-    },
-    onError: (error) => {
-      toastErrorCode(error.message)
     },
   })
 
