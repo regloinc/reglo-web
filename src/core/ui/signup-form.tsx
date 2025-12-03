@@ -1,6 +1,7 @@
 'use client'
 
 import { auth } from '@auth/config'
+import { useSignUpFormSchema } from '@auth/schemas'
 import { useToastErrorCode } from '@core/helpers/toast-error'
 import { cn } from '@core/lib/utils'
 import {
@@ -17,12 +18,11 @@ import {
   Input,
 } from '@core/ui/primitives'
 import { userCollection } from '@db/collections'
+import { useMutation } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 
 type SignupFormValues = {
   name: string
@@ -35,35 +35,14 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
   const t = useTranslations('auth')
   const toastErrorCode = useToastErrorCode()
   const router = useRouter()
-
-  const schema = useMemo(
-    () =>
-      z
-        .object({
-          name: z.string().min(1, { message: t('errors.fullNameRequired') }),
-          email: z
-            .string()
-            .min(1, { message: t('errors.emailRequired') })
-            .email({ message: t('errors.emailInvalid') }),
-          password: z
-            .string()
-            .min(1, { message: t('errors.passwordRequired') })
-            .min(8, { message: t('errors.passwordMin') }),
-          confirmPassword: z.string().min(1, { message: t('errors.confirmPasswordRequired') }),
-        })
-        .refine((data) => data.password === data.confirmPassword, {
-          path: ['confirmPassword'],
-          message: t('errors.passwordsMismatch'),
-        }),
-    [t]
-  )
+  const schema = useSignUpFormSchema()
 
   const {
     register,
     handleSubmit,
     setError,
     clearErrors,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<SignupFormValues>({
     defaultValues: {
       name: '',
@@ -73,59 +52,71 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
     },
   })
 
-  const onSubmit = async (formData: SignupFormValues) => {
-    clearErrors()
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (formData: SignupFormValues) => {
+      const result = schema.safeParse(formData)
 
-    const result = schema.safeParse(formData)
+      if (!result.success) {
+        result.error.issues.forEach((issue) => {
+          const field = issue.path[0]
 
-    if (!result.success) {
-      result.error.issues.forEach((issue) => {
-        const field = issue.path[0]
+          if (!field) {
+            return
+          }
 
-        if (!field) {
-          return
-        }
-
-        setError(field as keyof SignupFormValues, {
-          type: issue.code,
-          message: issue.message,
+          setError(field as keyof SignupFormValues, {
+            type: issue.code,
+            message: issue.message,
+          })
         })
+
+        throw new Error('VALIDATION_ERROR')
+      }
+
+      const { data, error } = await auth.signUp.email({
+        email: result.data.email,
+        password: result.data.password,
+        name: result.data.name,
       })
 
-      return
-    }
-
-    const { data, error } = await auth.signUp.email({
-      email: result.data.email,
-      password: result.data.password,
-      name: result.data.name,
-    })
-
-    if (error) {
-      toastErrorCode(error.code)
-      return
-    }
-
-    if (data?.user) {
-      const userData = {
-        id: data.user.id,
-        name: data.user.name,
-        email: data.user.email,
-        image: data.user.image ?? undefined,
+      if (error) {
+        throw new Error(error.code)
       }
 
-      if (userCollection.has(data.user.id)) {
-        userCollection.update(data.user.id, (draft) => {
-          draft.name = userData.name
-          draft.email = userData.email
-          draft.image = userData.image
-        })
-      } else {
-        userCollection.insert(userData)
+      if (data?.user) {
+        const userData = {
+          id: data.user.id,
+          name: data.user.name,
+          email: data.user.email,
+          image: data.user.image ?? undefined,
+        }
+
+        if (userCollection.has(data.user.id)) {
+          userCollection.update(data.user.id, (draft) => {
+            draft.name = userData.name
+            draft.email = userData.email
+            draft.image = userData.image
+          })
+        } else {
+          userCollection.insert(userData)
+        }
       }
 
+      return data
+    },
+    onSuccess: () => {
       router.push('/console')
-    }
+    },
+    onError: (error) => {
+      if (error.message !== 'VALIDATION_ERROR') {
+        toastErrorCode(error.message)
+      }
+    },
+  })
+
+  const onSubmit = (formData: SignupFormValues) => {
+    clearErrors()
+    mutate(formData)
   }
 
   return (
@@ -167,7 +158,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
                 )}
               </Field>
               <Field>
-                <Field className="grid grid-cols-2 gap-4">
+                <Field className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <Field>
                     <FieldLabel htmlFor="password">{t('password')}</FieldLabel>
                     <Input id="password" type="password" {...register('password')} />
@@ -189,7 +180,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
                 </Field>
               </Field>
               <Field className="gap-4 pt-6">
-                <Button loading={isSubmitting} type="submit" disabled={isSubmitting}>
+                <Button loading={isPending} type="submit" disabled={isPending}>
                   {t('createAccountButton')}
                 </Button>
                 <FieldDescription className="text-center">
