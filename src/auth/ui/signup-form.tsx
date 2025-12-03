@@ -3,6 +3,7 @@
 import { useSignUp } from '@auth/hooks/mutations'
 import { useSignUpFormSchema } from '@auth/schemas'
 import { cn } from '@core/lib/utils'
+import { Icon } from '@core/ui/icons'
 import {
   Button,
   Card,
@@ -14,6 +15,7 @@ import {
   FieldDescription,
   FieldGroup,
   FieldLabel,
+  FieldSeparator,
   Input,
 } from '@core/ui/primitives'
 import Link from 'next/link'
@@ -71,13 +73,22 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
-        <CardHeader className="pb-3 text-center">
+        <CardHeader className="pb-0 text-center">
           <CardTitle className="text-xl">{t('createAccount')}</CardTitle>
           <CardDescription>{t('signupDescription')}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            <FieldGroup className="gap-4">
+            <FieldGroup>
+              <Field>
+                <Button variant="outline" type="button">
+                  <Icon.Google className="size-4" />
+                  <span className="mt-0.5">{t('signUpWithGoogle')}</span>
+                </Button>
+              </Field>
+              <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
+                {t('orCreateWithEmail')}
+              </FieldSeparator>
               <Field>
                 <FieldLabel htmlFor="name">{t('fullName')}</FieldLabel>
                 <Input
@@ -138,7 +149,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
                   </Field>
                 </Field>
               </Field>
-              <Field className="gap-4 pt-6">
+              <Field className="gap-4 pt-2">
                 <Button loading={isPending} type="submit" disabled={isPending}>
                   {t('createAccountButton')}
                 </Button>
