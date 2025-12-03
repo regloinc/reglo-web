@@ -2,7 +2,7 @@
   "app": {
     "title": "Reglo",
     "description": "Business rules are at Reglo.",
-    "hello": "Hello World"
+    "coming-soon": "Coming soon"
   },
   "auth": {
     "signUpTitle": "Sign up - Reglo",

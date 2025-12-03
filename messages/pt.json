@@ -2,7 +2,7 @@
   "app": {
     "title": "Reglo",
     "description": "Regras de negócio é na Reglo.",
-    "hello": "Olá Mundo"
+    "coming-soon": "Em breve"
   },
   "auth": {
     "signUpTitle": "Cadastro - Reglo",
