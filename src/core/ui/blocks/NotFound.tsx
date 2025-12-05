@@ -9,8 +9,8 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@core/ui/primitives'
+import { Link } from '@i18n/routing'
 import { HistoryIcon, Home, Layers2 } from 'lucide-react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
