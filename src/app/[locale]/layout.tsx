@@ -55,7 +55,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={`${firaClassNames} antialiased`} suppressHydrationWarning>
-        <Providers>{children}</Providers>
+        <Providers locale={locale as Locale}>{children}</Providers>
       </body>
     </html>
   )

@@ -1,13 +1,5 @@
-import '@core/styles/globals.css'
-import { Providers } from '@core/providers/providers'
-import { firaClassNames } from '@core/styles/fonts'
+import type { PropsWithChildren } from 'react'
 
-export default function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${firaClassNames} antialiased`} suppressHydrationWarning>
-        <Providers>{children}</Providers>
-      </body>
-    </html>
-  )
+export default function Layout({ children }: PropsWithChildren) {
+  return children
 }

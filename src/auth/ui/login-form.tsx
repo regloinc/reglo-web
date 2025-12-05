@@ -19,13 +19,18 @@ import {
   Input,
 } from '@core/ui/primitives'
 import Link from 'next/link'
-import { useTranslations } from 'next-intl'
+import { useSearchParams } from 'next/navigation'
+import { useLocale, useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 
 export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
   const t = useTranslations('auth')
+  const locale = useLocale()
   const schema = useSignInFormSchema()
-  const { mutate, isPending } = useSignIn()
+  const searchParams = useSearchParams()
+  const redirectPath = searchParams.get('redirect')
+  const redirect = redirectPath ? `/${locale}${redirectPath}` : undefined
+  const { mutate, isPending } = useSignIn({ redirect, locale })
 
   const {
     register,

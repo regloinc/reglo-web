@@ -8,7 +8,12 @@ export type LoginFormValues = {
   password: string
 }
 
-export function useSignIn() {
+type UseSignInParams = {
+  redirect?: string
+  locale: string
+}
+
+export function useSignIn({ redirect, locale }: UseSignInParams) {
   const router = useRouter()
   const toastErrorCode = useToastErrorCode()
 
@@ -23,7 +28,7 @@ export function useSignIn() {
       return data
     },
     onSuccess: () => {
-      router.push('/console')
+      router.push(redirect || `/${locale}/console`)
     },
     onError: (error) => {
       toastErrorCode(error.message)
