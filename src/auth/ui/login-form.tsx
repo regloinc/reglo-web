@@ -69,7 +69,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <FieldGroup>
               <Field>
-                <Button variant="outline" type="button">
+                <Button variant="outline" type="button" disabled={true}>
                   <Icon.Google className="size-4" />
                   <span className="mt-0.5">{t('loginWithGoogle')}</span>
                 </Button>
