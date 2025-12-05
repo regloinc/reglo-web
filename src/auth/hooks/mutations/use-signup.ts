@@ -1,12 +1,14 @@
 import { auth } from '@auth/config'
 import type { SignupFormValues } from '@auth/ui/signup-form'
-import { useToastErrorCode } from '@core/helpers/toast-error'
+import { useToastErrorCode } from '@core/hooks'
+import { useLocalePathname } from '@i18n/hooks'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 
 export function useSignUp() {
   const router = useRouter()
   const toastErrorCode = useToastErrorCode()
+  const normalizeUrl = useLocalePathname()
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (result: SignupFormValues) => {
@@ -20,7 +22,7 @@ export function useSignUp() {
       return data
     },
     onSuccess: () => {
-      router.push('/console')
+      router.push(normalizeUrl('/console'))
     },
     onError: (error) => {
       toastErrorCode(error.message)

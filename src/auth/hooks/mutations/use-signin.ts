@@ -1,21 +1,19 @@
 import { auth } from '@auth/config'
-import { useToastErrorCode } from '@core/helpers/toast-error'
+import { useToastErrorCode } from '@core/hooks'
+import { useRouter } from '@i18n/routing'
 import { useMutation } from '@tanstack/react-query'
-import { useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 
 export type LoginFormValues = {
   email: string
   password: string
 }
 
-type UseSignInParams = {
-  redirect?: string
-  locale: string
-}
-
-export function useSignIn({ redirect, locale }: UseSignInParams) {
+export function useSignIn() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const toastErrorCode = useToastErrorCode()
+  const redirectPath = searchParams.get('redirect')
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (result: LoginFormValues) => {
@@ -28,7 +26,7 @@ export function useSignIn({ redirect, locale }: UseSignInParams) {
       return data
     },
     onSuccess: () => {
-      router.push(redirect || `/${locale}/console`)
+      router.push(redirectPath || '/console')
     },
     onError: (error) => {
       toastErrorCode(error.message)
