@@ -1,4 +1,4 @@
-import { getLocaleFromPathname, getPathnameWithoutLocale } from '@core/helpers/proxy'
+import { getLocaleFromPathname, getPathnameWithoutLocale } from '@i18n/helpers'
 import { routing } from '@i18n/routing'
 import { getSessionCookie } from 'better-auth/cookies'
 import { type NextRequest, NextResponse } from 'next/server'
